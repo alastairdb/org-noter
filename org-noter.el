@@ -582,13 +582,14 @@ If nil, the session used will be `org-noter--session'."
 (defun org-noter--set-notes-scroll (window &rest ignored)
   (when window
     (with-selected-window window
-      (org-noter--with-valid-session
-       (let* ((level (org-noter--session-level session))
-              (goal (* (1- level) 2))
-              (current-scroll (window-hscroll)))
-         (when (and (bound-and-true-p org-indent-mode) (< current-scroll goal))
-           (scroll-right current-scroll)
-           (scroll-left goal t)))))))
+      (unless visual-line-mode
+        (org-noter--with-valid-session
+         (let* ((level (org-noter--session-level session))
+                (goal (* (1- level) 2))
+                (current-scroll (window-hscroll)))
+           (when (and (bound-and-true-p org-indent-mode) (< current-scroll goal))
+             (scroll-right current-scroll)
+             (scroll-left goal t))))))))
 
 (defun org-noter--insert-heading (level title &optional newlines-number location)
   "Insert a new heading at LEVEL with TITLE.
